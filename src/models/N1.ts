@@ -13,7 +13,7 @@ export const N1Definition: StreamDockModelDefinition = {
 	usbIds: [
 		{
 			vendorId: 0x6603,
-			productIds: [0x1011],
+			productIds: [0x1011, 0x1000],
 		},
 	],
 

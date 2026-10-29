@@ -10,7 +10,19 @@ The module can be built once with `yarn build`. This should be enough to get the
 
 While developing the module, by using `yarn dev` the compiler will be run in watch mode to recompile the files on change.
 
+## Mini / MiniW
+
+Stream Dock Mini (`5548:1036`) and MiniW (`5548:1037`, `5548:1040`) use a 3×4 Companion grid: six 64×64 LCD keys in the first two rows, followed by one row for each three-way switch. Each switch maps left, push, and right to separate buttons with press and release events. RGB strip control is not included.
+
+See [HELP.md](./companion/HELP.md#mirabox-stream-dock-mini--miniw) for the control layout.
+
 ## Version History
+
+### 1.4.0 (2026-10-29)
+
+- feat: add Mini and MiniW support, including the MiniW PID `0x1040`
+- feat: add alternative VID/PID pairs for 293V3, N3, N1, N4 Pro, and M18
+- chore: update the USB discovery manifest and device documentation
 
 ### 1.3.0 (2026-09-22)
 

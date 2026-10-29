@@ -13,6 +13,7 @@ import { M3Definition } from './M3.js'
 import { N1Definition } from './N1.js'
 import { K1ProDefinition } from './K1Pro.js'
 import { H1ProDefinition } from './H1Pro.js'
+import { MiniDefinition, MiniWDefinition } from './Mini.js'
 import { Ajaz_AKP153Definition } from './Ajazz-AKP153.js'
 import { Ajaz_AKP153EDefinition } from './Ajazz-AKP153E.js'
 import { Ajaz_AKP03EDefinition } from './Ajazz-AKP03E.js'
@@ -124,5 +125,7 @@ export const AllModels: StreamDockModelDefinition[] = [
 	Ajaz_AKP153EDefinition,
 	K1ProDefinition,
 	H1ProDefinition,
+	MiniDefinition,
+	MiniWDefinition,
 	Ajaz_AKP03EDefinition,
 ]

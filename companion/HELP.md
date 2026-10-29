@@ -99,6 +99,14 @@ _4×3 LCD keys_
 
 The twelve LCD keys map directly to a four-column by three-row Companion grid. Each key provides separate press and release events.
 
+### Mirabox Stream Dock Mini / MiniW
+
+_3×2 LCD keys, 2 three-way switches_
+
+Mini and MiniW use the same three-column by four-row Companion layout. The six LCD keys occupy the first two rows. Each key uses a 64×64 image and provides separate press and release events.
+
+The first switch occupies the first three columns of the third row, and the second switch occupies the same columns of the fourth row. For each switch, the columns map to left, push, and right. Each action has separate press and release events, so it can be held until the switch returns to its neutral position.
+
 ### Mirabox Stream Dock HSV293S, Ajazz AKP153, Ajazz AKP153E
 
 _5x3 LCD keys, vertical LCD sidescreen_

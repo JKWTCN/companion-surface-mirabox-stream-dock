@@ -9,7 +9,7 @@ import { N4_1234Definition } from './N4-1234.js'
 export const N4ProDefinition: StreamDockModelDefinition = {
 	...N4_1234Definition,
 	productName: 'Stream Dock N4 Pro',
-	usbIds: [{ vendorId: 0x5548, productIds: [0x1008, 0x1021] }],
+	usbIds: [{ vendorId: 0x5548, productIds: [0x1008, 0x1021, 0x1023] }],
 	ledArrayLength: 12,
 	inputs: N4_1234Definition.inputs.map((input): StreamDockInputDefinition => {
 		if ((input.row === 2 || input.row === 3) && input.type === 'push') {
