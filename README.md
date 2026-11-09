@@ -18,12 +18,6 @@ See [HELP.md](./companion/HELP.md#mirabox-stream-dock-mini--miniw) for the contr
 
 ## Version History
 
-### 1.4.0 (2026-10-29)
-
-- feat: add Mini and MiniW support, including the MiniW PID `0x1040`
-- feat: add alternative VID/PID pairs for 293V3, N3, N1, N4 Pro, and M18
-- chore: update the USB discovery manifest and device documentation
-
 ### 1.3.0 (2026-09-22)
 
 - feat: add support for Stream Dock N4 Pro, K1 Pro, H1 Pro, N1 and M3
@@ -34,6 +28,9 @@ See [HELP.md](./companion/HELP.md#mirabox-stream-dock-mini--miniw) for the contr
 - fix: handle H1 Pro cancel events as button releases for Companion long-press compatibility
 - fix: improve K1 Pro device detection and initialization on macOS
 - docs: add device layouts and firmware requirements for newly supported models
+- feat: add Mini and MiniW support, including the MiniW PID `0x1040`
+- feat: add alternative VID/PID pairs for 293V3, N3, N1, N4 Pro, and M18
+- chore: update the USB discovery manifest and device documentation
 
 ### 1.2.0 (2026-03-15)
 
