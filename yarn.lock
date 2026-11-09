@@ -1256,6 +1256,7 @@ __metadata:
     "@types/semver": "npm:^7.7.1"
     eslint: "npm:^9.39.4"
     husky: "npm:^9.1.7"
+    koffi: "npm:~2.16.3"
     lint-staged: "npm:^16.3.3"
     node-hid: "npm:^3.3.0"
     prettier: "npm:^3.8.1"
@@ -2264,6 +2265,13 @@ __metadata:
   version: 6.0.3
   resolution: "kind-of@npm:6.0.3"
   checksum: 10c0/61cdff9623dabf3568b6445e93e31376bee1cdb93f8ba7033d86022c2a9b1791a1d9510e026e6465ebd701a6dd2f7b0808483ad8838341ac52f003f512e0b4c4
+  languageName: node
+  linkType: hard
+
+"koffi@npm:~2.16.3":
+  version: 2.16.3
+  resolution: "koffi@npm:2.16.3"
+  checksum: 10c0/3651d98bfad1e4a6ef8f38b7e46d5c3c058653f64ed844a982ee64e7e7a72f892024d7a624db646404e9a1641458f32430af1208d7b5b9c8d9cc57b36af9e974
   languageName: node
   linkType: hard
 

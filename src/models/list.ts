@@ -48,6 +48,8 @@ export interface StreamDockModelDefinition {
 	 * cancelled press is ended with keyUp in Companion. 0x00 is always release.
 	 */
 	buttonReleaseValues?: number[]
+	/** Minimum numeric firmware suffix for separate knob press and release events. */
+	knobReleaseMinFirmware?: number
 	/** If true, send the report-ID 4 WEB-off command before other initialization commands. */
 	disableWebModeOnConnect?: boolean
 	/** Touch-strip coordinates used to turn one touch contact into soft-key down/up events. */
@@ -67,7 +69,7 @@ export interface StreamDockModelDefinition {
 	configFields?: Array<SomeCompanionInputField>
 }
 export interface StreamDockInputDefinition {
-	type: 'button' | 'push' | 'rotateLeft' | 'rotateRight' | 'swipeLeft' | 'swipeRight'
+	type: 'button' | 'push' | 'knobPress' | 'rotateLeft' | 'rotateRight' | 'swipeLeft' | 'swipeRight'
 	id: number
 	row: number
 	column: number

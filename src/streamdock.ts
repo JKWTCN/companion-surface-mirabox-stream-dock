@@ -31,12 +31,15 @@ export class StreamDock extends EventEmitter<StreamDockEvents> {
 		return this.model.packetSize ?? 1024
 	}
 
-	constructor(deviceInfo: HIDDevice, device: HIDAsync, model: StreamDockModelDefinition) {
+	constructor(deviceInfo: HIDDevice, device: HIDAsync, model: StreamDockModelDefinition, firmwareVersion?: string) {
 		super()
 
 		this.info = deviceInfo
 		this.device = device
 		this.model = model
+		const firmwareRevision = Number(firmwareVersion?.match(/^V\d+\..+\.(\d+)$/i)?.[1])
+		const hasKnobRelease =
+			model.knobReleaseMinFirmware !== undefined && firmwareRevision >= model.knobReleaseMinFirmware
 
 		this.device.on('error', (error) => {
 			console.error(`Stream Dock Error: ${error}`)
@@ -54,18 +57,16 @@ export class StreamDock extends EventEmitter<StreamDockEvents> {
 					? data.subarray(1)
 					: data
 			if (packet.length >= 11) {
-				if (this.handleTouchSoftKey(packet)) return
-
 				const functionRaw = packet[9]
 				const parameterRaw = packet[10]
+				const action = this.model.inputs.find((input) => input.id === functionRaw)
+				if (action?.type !== 'knobPress' && this.handleTouchSoftKey(packet)) return
+
 				if (this.model.modeReport === functionRaw && parameterRaw === (this.model.modeReportValue ?? 0x00)) {
 					this.emit('mode', functionRaw)
 					return
 				}
 
-				const action = this.model.inputs.find((input) => {
-					return input.id === functionRaw
-				})
 				if (action) {
 					if (action.type === 'button') {
 						if (parameterRaw === 0x00 || this.model.buttonReleaseValues?.includes(parameterRaw)) {
@@ -73,6 +74,9 @@ export class StreamDock extends EventEmitter<StreamDockEvents> {
 						} else {
 							this.emit('down', action)
 						}
+					} else if (action.type === 'knobPress') {
+						if (parameterRaw === 0x01) this.emit(hasKnobRelease ? 'down' : 'push', action)
+						if (parameterRaw === 0x00 && hasKnobRelease) this.emit('up', action)
 					} else if (action.type === 'push') {
 						this.emit('push', action)
 					} else if (action.type === 'rotateLeft') {

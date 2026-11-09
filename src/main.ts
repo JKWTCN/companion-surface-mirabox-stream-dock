@@ -10,6 +10,7 @@ import { generatePincodeMap as createPincodeMap } from './pincode.js'
 import { MiraboxWrapper } from './instance.js'
 import { createSurfaceSchema } from './surface-schema.js'
 import { createConfigFields } from './config.js'
+import { getFirmwareVersion } from './firmware.js'
 import { HIDAsync } from 'node-hid'
 import { AllModels, StreamDockModelDefinition } from './models/list.js'
 
@@ -65,6 +66,15 @@ const MiraboxPlugin: SurfacePlugin<MiraboxPluginInfo> = {
 		pluginInfo: MiraboxPluginInfo,
 		context: SurfaceContext,
 	): Promise<OpenSurfaceResult> => {
+		let firmwareVersion: string | undefined
+		if (pluginInfo.model.knobReleaseMinFirmware !== undefined) {
+			firmwareVersion = await getFirmwareVersion(pluginInfo.device.path).catch((error: unknown) => {
+				logger.warn(`Could not read firmware version for ${surfaceId}: ${String(error)}`)
+				return undefined
+			})
+			logger.debug(`Firmware version for ${surfaceId}: ${firmwareVersion ?? 'unknown'}`)
+		}
+
 		const device = await HIDAsync.open(pluginInfo.device.path).catch((error: unknown) => {
 			throw new Error(`Failed to open HID device ${pluginInfo.device.path}: ${String(error)}`, { cause: error })
 		})
@@ -72,7 +82,7 @@ const MiraboxPlugin: SurfacePlugin<MiraboxPluginInfo> = {
 		logger.debug(`Opening ${pluginInfo.device.path} device: ${pluginInfo.model.productName} (${surfaceId})`)
 
 		return {
-			surface: new MiraboxWrapper(surfaceId, pluginInfo.device, device, pluginInfo.model, context),
+			surface: new MiraboxWrapper(surfaceId, pluginInfo.device, device, pluginInfo.model, context, firmwareVersion),
 			registerProps: {
 				brightness: true,
 				surfaceLayout: createSurfaceSchema(pluginInfo.model),
