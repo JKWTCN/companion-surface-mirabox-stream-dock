@@ -13,6 +13,7 @@ import { createConfigFields } from './config.js'
 import { getFirmwareVersion } from './firmware.js'
 import { HIDAsync } from 'node-hid'
 import { AllModels, StreamDockModelDefinition } from './models/list.js'
+import { getN4ProDefinition, N4ProDefinition } from './models/N4-Pro.js'
 
 export interface MiraboxPluginInfo {
 	device: HIDDevice
@@ -74,6 +75,9 @@ const MiraboxPlugin: SurfacePlugin<MiraboxPluginInfo> = {
 			})
 			logger.debug(`Firmware version for ${surfaceId}: ${firmwareVersion ?? 'unknown'}`)
 		}
+		const revision = firmwareVersion?.match(/^V\d+\..+\.(\d+)\D*$/i)?.[1]
+		const firmwareRevision = revision === undefined ? undefined : Number(revision)
+		const model = pluginInfo.model === N4ProDefinition ? getN4ProDefinition(firmwareRevision) : pluginInfo.model
 
 		const device = await HIDAsync.open(pluginInfo.device.path).catch((error: unknown) => {
 			throw new Error(`Failed to open HID device ${pluginInfo.device.path}: ${String(error)}`, { cause: error })
@@ -82,12 +86,12 @@ const MiraboxPlugin: SurfacePlugin<MiraboxPluginInfo> = {
 		logger.debug(`Opening ${pluginInfo.device.path} device: ${pluginInfo.model.productName} (${surfaceId})`)
 
 		return {
-			surface: new MiraboxWrapper(surfaceId, pluginInfo.device, device, pluginInfo.model, context, firmwareVersion),
+			surface: new MiraboxWrapper(surfaceId, pluginInfo.device, device, model, context, firmwareRevision),
 			registerProps: {
 				brightness: true,
-				surfaceLayout: createSurfaceSchema(pluginInfo.model),
-				pincodeMap: createPincodeMap(pluginInfo.model),
-				configFields: createConfigFields(pluginInfo.model),
+				surfaceLayout: createSurfaceSchema(model),
+				pincodeMap: createPincodeMap(model),
+				configFields: createConfigFields(model),
 				location: null,
 			},
 		}
