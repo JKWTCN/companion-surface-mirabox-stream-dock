@@ -55,9 +55,7 @@ _5×2 LCD keys, 4 rotary encoders with RGB LEDs, LCD strip with touch buttons_
 
 The N4 Pro uses the same Companion grid layout as the N4. The two rows of five LCD keys map directly to the first two rows. The four soft keys on the LCD strip are mapped to the first four buttons in the third row, and the four rotary encoders are mapped to the first four buttons in the fourth row.
 
-Unlike the N4, each N4 Pro rotary encoder provides separate press and release events. This means press actions remain active while an encoder is held down and release actions run when it is released. The touch strip is divided into four soft-key regions, and each region also provides separate press and release events.
-
-N4 Pro firmware `V4.N4 Pro_HJDF02.014` or later is required for correct rotary encoder press and release events. With older firmware, an encoder release may not be reported correctly.
+The touch strip is divided into four soft-key regions that provide separate press and release events. On firmware revision `013` or later, the rotary encoders also report press and release separately. Companion treats each encoder press as a click on older firmware such as `V4.N4 Pro E_HXWY.02.012`, or when the version is unavailable.
 
 To use a rotary encoder, enable the `Enable Rotary Actions` checkbox for its button. The LCD strip swipe gesture is mapped to the rotary actions of the fifth button in the third row: swiping left runs the rotate-left actions and swiping right runs the rotate-right actions.
 
@@ -98,6 +96,16 @@ Currently the LCD keys and the regular buttons are supported.
 _4×3 LCD keys_
 
 The twelve LCD keys map directly to a four-column by three-row Companion grid. Each key provides separate press and release events.
+
+### Mirabox Stream Dock Mini / MiniW
+
+_3×2 LCD keys, 2 three-way switches_
+
+Mini and MiniW use the same three-column by four-row Companion layout. The six LCD keys occupy the first two rows. Each key uses a 64×64 image and provides separate press and release events.
+
+The first switch occupies the first three columns of the third row, and the second switch occupies the same columns of the fourth row. For each switch, the columns map to left, push, and right. Each action has separate press and release events, so it can be held until the switch returns to its neutral position.
+
+LCD key images are the only supported output on these models.
 
 ### Mirabox Stream Dock HSV293S, Ajazz AKP153, Ajazz AKP153E
 

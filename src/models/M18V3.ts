@@ -3,7 +3,10 @@ import type { StreamDockModelDefinition } from './list.js'
 export const M18V3Definition: StreamDockModelDefinition = {
 	productName: 'Stream Dock M18V3',
 	iconRotation: 0,
-	usbIds: [{ vendorId: 0x6603, productIds: [0x1012] }],
+	usbIds: [
+		{ vendorId: 0x6603, productIds: [0x1012, 0x1009] },
+		{ vendorId: 0x5548, productIds: [0x1000] }, // VSD / VSDinside-branded M18.
+	],
 
 	inputs: [
 		{

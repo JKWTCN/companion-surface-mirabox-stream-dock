@@ -2,18 +2,21 @@ import type { StreamDockInputDefinition, StreamDockModelDefinition } from './lis
 import { N4_1234Definition } from './N4-1234.js'
 
 /**
- * The N4 Pro uses the same control layout as the N4, but its rotary encoders
- * report both press (parameter 0x01) and release (parameter 0x00). It also has
- * an RGB LED above each encoder. The four RGB triplets form a 12-byte SETLB payload.
+ * The N4 Pro adds an RGB LED above each encoder. The four RGB triplets form a
+ * 12-byte SETLB payload.
  */
 export const N4ProDefinition: StreamDockModelDefinition = {
 	...N4_1234Definition,
 	productName: 'Stream Dock N4 Pro',
-	usbIds: [{ vendorId: 0x5548, productIds: [0x1008, 0x1021] }],
+	usbIds: [{ vendorId: 0x5548, productIds: [0x1008, 0x1021, 0x1023] }],
 	ledArrayLength: 12,
+	knobReleaseMinFirmware: 13,
 	inputs: N4_1234Definition.inputs.map((input): StreamDockInputDefinition => {
-		if ((input.row === 2 || input.row === 3) && input.type === 'push') {
+		if (input.type === 'push' && input.row === 2) {
 			return { ...input, type: 'button' }
+		}
+		if (input.type === 'push' && input.row === 3) {
+			return { ...input, type: 'knobPress' }
 		}
 
 		return { ...input }

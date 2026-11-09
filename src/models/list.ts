@@ -13,6 +13,7 @@ import { M3Definition } from './M3.js'
 import { N1Definition } from './N1.js'
 import { K1ProDefinition } from './K1Pro.js'
 import { H1ProDefinition } from './H1Pro.js'
+import { MiniDefinition, MiniWDefinition } from './Mini.js'
 import { Ajaz_AKP153Definition } from './Ajazz-AKP153.js'
 import { Ajaz_AKP153EDefinition } from './Ajazz-AKP153E.js'
 import { Ajaz_AKP03EDefinition } from './Ajazz-AKP03E.js'
@@ -47,6 +48,8 @@ export interface StreamDockModelDefinition {
 	 * cancelled press is ended with keyUp in Companion. 0x00 is always release.
 	 */
 	buttonReleaseValues?: number[]
+	/** Minimum numeric firmware suffix for separate knob press and release events. */
+	knobReleaseMinFirmware?: number
 	/** If true, send the report-ID 4 WEB-off command before other initialization commands. */
 	disableWebModeOnConnect?: boolean
 	/** Touch-strip coordinates used to turn one touch contact into soft-key down/up events. */
@@ -66,7 +69,7 @@ export interface StreamDockModelDefinition {
 	configFields?: Array<SomeCompanionInputField>
 }
 export interface StreamDockInputDefinition {
-	type: 'button' | 'push' | 'rotateLeft' | 'rotateRight' | 'swipeLeft' | 'swipeRight'
+	type: 'button' | 'push' | 'knobPress' | 'rotateLeft' | 'rotateRight' | 'swipeLeft' | 'swipeRight'
 	id: number
 	row: number
 	column: number
@@ -124,5 +127,7 @@ export const AllModels: StreamDockModelDefinition[] = [
 	Ajaz_AKP153EDefinition,
 	K1ProDefinition,
 	H1ProDefinition,
+	MiniDefinition,
+	MiniWDefinition,
 	Ajaz_AKP03EDefinition,
 ]

@@ -17,11 +17,15 @@ While developing the module, by using `yarn dev` the compiler will be run in wat
 - feat: add support for Stream Dock N4 Pro, K1 Pro, H1 Pro, N1 and M3
 - feat: add N4 Pro rotary encoder RGB LED and vibration controls
 - feat: add press and release handling for N4 Pro rotary encoders and soft keys
+- fix: detect N4 Pro firmware on connection and use separate encoder press and release events from revision `013`, with single clicks on older or unknown versions
 - feat: add K1 Pro rotary encoder support and device-specific HID image transfers
 - feat: add automatic console-mode switching and image restoration for N1 and H1 Pro
 - fix: handle H1 Pro cancel events as button releases for Companion long-press compatibility
 - fix: improve K1 Pro device detection and initialization on macOS
 - docs: add device layouts and firmware requirements for newly supported models
+- feat: add Stream Dock Mini (`5548:1036`) and MiniW (`5548:1037`, `5548:1040`) support, including LCD keys and three-way switch inputs ([control layout](./companion/HELP.md#mirabox-stream-dock-mini--miniw))
+- feat: add alternative VID/PID pairs for 293V3, N3, N1, N4 Pro, and M18
+- chore: update the USB discovery manifest and device documentation
 
 ### 1.2.0 (2026-03-15)
 
