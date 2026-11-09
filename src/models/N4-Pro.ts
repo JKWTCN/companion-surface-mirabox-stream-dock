@@ -1,6 +1,8 @@
 import type { StreamDockInputDefinition, StreamDockModelDefinition } from './list.js'
 import { N4_1234Definition } from './N4-1234.js'
 
+const touchKeyWidth = 200
+
 /**
  * The N4 Pro adds an RGB LED above each encoder. The four RGB triplets form a
  * 12-byte SETLB payload.
@@ -25,6 +27,7 @@ export const N4ProDefinition: StreamDockModelDefinition = {
 		minX: 114,
 		maxX: 693,
 		inputIds: [0x40, 0x41, 0x42, 0x43],
+		reportRegionWidth: touchKeyWidth,
 	},
 	outputs: [
 		...N4_1234Definition.outputs,
@@ -41,4 +44,15 @@ export const N4ProDefinition: StreamDockModelDefinition = {
 			default: true,
 		},
 	],
+}
+
+export function getN4ProDefinition(firmwareRevision: number | undefined): StreamDockModelDefinition {
+	if (firmwareRevision === undefined || firmwareRevision < 16) return N4ProDefinition
+
+	return {
+		...N4ProDefinition,
+		outputs: N4ProDefinition.outputs.map((output) =>
+			output.type === 'lcd' && output.row === 2 ? { ...output, resolutionx: touchKeyWidth, resolutiony: 112 } : output,
+		),
+	}
 }

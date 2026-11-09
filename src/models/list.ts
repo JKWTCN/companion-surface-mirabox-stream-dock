@@ -57,6 +57,8 @@ export interface StreamDockModelDefinition {
 		minX: number
 		maxX: number
 		inputIds: number[]
+		/** Width of one soft-key region in a TP report. */
+		reportRegionWidth: number
 	}
 
 	inputs: StreamDockInputDefinition[]

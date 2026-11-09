@@ -25,21 +25,25 @@ export class StreamDock extends EventEmitter<StreamDockEvents> {
 	private readonly model: StreamDockModelDefinition
 	private heartbeatInterval: NodeJS.Timeout | undefined
 	private activeTouchSoftKey: StreamDockInputDefinition | undefined
+	private usesTouchReports = false
+	private touchStartX: number | undefined
 	private imageTransferQueue: Promise<void> = Promise.resolve()
 
 	get packetSize(): number {
 		return this.model.packetSize ?? 1024
 	}
 
-	constructor(deviceInfo: HIDDevice, device: HIDAsync, model: StreamDockModelDefinition, firmwareVersion?: string) {
+	constructor(deviceInfo: HIDDevice, device: HIDAsync, model: StreamDockModelDefinition, firmwareRevision?: number) {
 		super()
 
 		this.info = deviceInfo
 		this.device = device
 		this.model = model
-		const firmwareRevision = Number(firmwareVersion?.match(/^V\d+\..+\.(\d+)$/i)?.[1])
 		const hasKnobRelease =
-			model.knobReleaseMinFirmware !== undefined && firmwareRevision >= model.knobReleaseMinFirmware
+			model.knobReleaseMinFirmware !== undefined &&
+			firmwareRevision !== undefined &&
+			firmwareRevision >= model.knobReleaseMinFirmware
+		const touch = model.touchSoftKeys
 
 		this.device.on('error', (error) => {
 			console.error(`Stream Dock Error: ${error}`)
@@ -52,15 +56,39 @@ export class StreamDock extends EventEmitter<StreamDockEvents> {
 			// 		.slice(0, 16)
 			// 		.map((d) => (d as number).toString(16))}`,
 			// )
-			const packet =
-				data.length >= 4 && data[0] !== 0x41 && data[1] === 0x41 && data[2] === 0x43 && data[3] === 0x4b
-					? data.subarray(1)
-					: data
+			const hasReportId =
+				(touch && data[0] === 0x00) ||
+				(data.length >= 4 && data[0] !== 0x41 && data[1] === 0x41 && data[2] === 0x43 && data[3] === 0x4b)
+			const packet = hasReportId ? data.subarray(1) : data
+			if (touch) {
+				if (packet[0] === 0x54 && packet[1] === 0x50) {
+					this.handleTouchReport(packet, touch.inputIds, touch.reportRegionWidth)
+					return
+				}
+				// N4 Pro also reports control replies on this endpoint.
+				if (
+					packet[0] !== 0x41 ||
+					packet[1] !== 0x43 ||
+					packet[2] !== 0x4b ||
+					packet[5] !== 0x4f ||
+					packet[6] !== 0x4b
+				) {
+					return
+				}
+			}
 			if (packet.length >= 11) {
 				const functionRaw = packet[9]
 				const parameterRaw = packet[10]
 				const action = this.model.inputs.find((input) => input.id === functionRaw)
-				if (action?.type !== 'knobPress' && this.handleTouchSoftKey(packet)) return
+				if (touch) {
+					if (this.usesTouchReports) {
+						if (touch.inputIds.includes(functionRaw) || action?.type === 'swipeLeft' || action?.type === 'swipeRight') {
+							return
+						}
+					} else if (action?.type !== 'knobPress' && this.handleLegacyTouchSoftKey(packet)) {
+						return
+					}
+				}
 
 				if (this.model.modeReport === functionRaw && parameterRaw === (this.model.modeReportValue ?? 0x00)) {
 					this.emit('mode', functionRaw)
@@ -97,20 +125,47 @@ export class StreamDock extends EventEmitter<StreamDockEvents> {
 		this.heartbeatInterval = setInterval(() => void this.sendHeartbeat(), 8000)
 	}
 
-	private handleTouchSoftKey(data: Buffer): boolean {
-		const touch = this.model.touchSoftKeys
-		if (!touch || data.length < 13) return false
+	private handleTouchReport(packet: Buffer, inputIds: number[], regionWidth: number): void {
+		if (packet.length < 14 || packet[2] > 3) return
+		this.usesTouchReports = true
 
-		// node-hid strips report ID 0, leaving the ACK packet at byte zero.
-		const isTouchStatePacket =
-			data[0] === 0x41 &&
-			data[1] === 0x43 &&
-			data[2] === 0x4b &&
-			data[3] === 0x00 &&
-			data[4] === 0x00 &&
-			data[5] === 0x4f &&
-			data[6] === 0x4b
-		if (!isTouchStatePacket) return false
+		const phase = packet[2]
+		const x = packet.readUInt16BE(4)
+		if (phase === 0) {
+			const inputId = inputIds[Math.floor(x / regionWidth)]
+			const action = this.model.inputs.find((input) => input.id === inputId)
+			if (this.activeTouchSoftKey?.id !== action?.id) {
+				this.releaseTouchSoftKey()
+				this.activeTouchSoftKey = action
+				if (action) this.emit('down', action)
+			}
+			this.touchStartX = action ? x : undefined
+		} else if (phase === 2 || phase === 3) {
+			const startX = this.touchStartX
+			this.touchStartX = undefined
+			this.releaseTouchSoftKey()
+
+			// TP reports down, move, up and cancel. Detect a swipe on up using
+			// half a soft-key width as the minimum horizontal travel.
+			if (phase === 3 || startX === undefined || x >= inputIds.length * regionWidth) return
+			const travel = x - startX
+			if (Math.abs(travel) < regionWidth / 2) return
+
+			const direction = travel < 0 ? -1 : 1
+			const swipe = this.model.inputs.find((input) => input.type === (direction < 0 ? 'swipeLeft' : 'swipeRight'))
+			if (swipe) this.emit('rotate', swipe, direction)
+		}
+	}
+
+	private releaseTouchSoftKey(): void {
+		const action = this.activeTouchSoftKey
+		this.activeTouchSoftKey = undefined
+		if (action) this.emit('up', action)
+	}
+
+	private handleLegacyTouchSoftKey(data: Buffer): boolean {
+		const touch = this.model.touchSoftKeys
+		if (!touch || data.length < 13 || data[3] !== 0x00 || data[4] !== 0x00) return false
 
 		const isTouchFunction = data[9] === 0x00 || touch.inputIds.includes(data[9])
 		if (data[10] === 0x01 && isTouchFunction) {
@@ -132,8 +187,7 @@ export class StreamDock extends EventEmitter<StreamDockEvents> {
 		}
 
 		if (data[10] !== 0x01 && this.activeTouchSoftKey) {
-			this.emit('up', this.activeTouchSoftKey)
-			this.activeTouchSoftKey = undefined
+			this.releaseTouchSoftKey()
 
 			const releaseAction = this.model.inputs.find((input) => input.id === data[9])
 			if (releaseAction?.type === 'swipeLeft') this.emit('rotate', releaseAction, -1)

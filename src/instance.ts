@@ -40,10 +40,10 @@ export class MiraboxWrapper implements SurfaceInstance {
 		device: HIDAsync,
 		model: StreamDockModelDefinition,
 		context: SurfaceContext,
-		firmwareVersion?: string,
+		firmwareRevision?: number,
 	) {
 		this.#logger = createModuleLogger(`Instance/${surfaceId}`)
-		this.#streamDock = new StreamDock(deviceInfo, device, model, firmwareVersion)
+		this.#streamDock = new StreamDock(deviceInfo, device, model, firmwareRevision)
 		this.#surfaceId = surfaceId
 		this.#context = context
 
