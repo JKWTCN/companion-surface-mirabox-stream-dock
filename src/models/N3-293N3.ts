@@ -21,10 +21,6 @@ export const N3_293N3Definition: StreamDockModelDefinition = {
 			vendorId: 0x5548,
 			productIds: [0x1001],
 		},
-		{
-			vendorId: 0x1500,
-			productIds: [0x3001],
-		},
 	],
 
 	inputs: [

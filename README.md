@@ -12,9 +12,9 @@ While developing the module, by using `yarn dev` the compiler will be run in wat
 
 ## Version History
 
-### 1.3.0 (2026-09-22)
+### Unreleased
 
-- feat: add support for Stream Dock N4 Pro, K1 Pro, H1 Pro, N1 and M3
+- feat: add K1 Pro, H1 Pro and M3 support; extend N1 and N4 Pro support
 - feat: add N4 Pro rotary encoder RGB LED and vibration controls
 - feat: add press and release handling for N4 Pro rotary encoders and soft keys
 - fix: detect N4 Pro firmware on connection and use separate encoder press and release events from revision `013`, with single clicks on older or unknown versions
@@ -27,6 +27,16 @@ While developing the module, by using `yarn dev` the compiler will be run in wat
 - feat: add alternative VID/PID pairs for 293V3, N3, N1, N4 Pro, and M18
 - chore: update the USB discovery manifest and device documentation
 
+### 1.3.0 (2026-10-20)
+
+- feat: Add soomfon CN002
+- feat: Add Ajazz AKP05E
+- feat: add N1
+- feat: Add VSDinside Stream Dock M18
+- feat: add Streonor S15
+- feat: add Mirabox Stream Dock N4 Pro
+- fix: Stream Dock XL side LED brightness
+
 ### 1.2.0 (2026-03-15)
 
 - feat: add XL
@@ -34,12 +44,6 @@ While developing the module, by using `yarn dev` the compiler will be run in wat
 - feat: add possibility of LED outputs
 - feat: add heartbeat to all models to prevent reboot
 - fix: rework help file
-- chore: update dependency eslint to 9.39.4
-- chore: update dependency lint-staged to 16.3.3
-- chore: update dependency rimraf to 6.1.3
-- chore: update dependency types/node to 22.19.15
-- chore: update dependency companion-module/tools to 2.7.1
-- chore: update dependency typescript-eslint to 8.57.0
 
 ### 1.1.0 (2026-02-07)
 
@@ -47,13 +51,6 @@ While developing the module, by using `yarn dev` the compiler will be run in wat
 - feat: add AJAZZ AKP153E
 - fix: async jpeg encoding
 - fix: simplify packet chunking
-- chore: update dependency jpeg-turbo to 3.0.1
-- chore: update dependency node-hid to 3.3.0
-- chore: update dependency node-gyp to 12.2.0
-- chore: update dependency companion-surface/base to 1.1.0
-- chore: update dependency companion-module/tools to 2.6.1
-- chore: update dependency prettier to 3.8.1
-- chore: update dependency typescript-eslint to 8.54.0
 
 ### 1.0.2 (2026-01-04)
 
@@ -66,7 +63,7 @@ While developing the module, by using `yarn dev` the compiler will be run in wat
 
 ### 1.0.0 (2025-12-16)
 
-- major: initial release of this module based on the prior code from Companion including support for 239V3, N3 and N4
+- major: initial release of this module based on the prior code from Companion including support for 293V3, N3 and N4
 - feat: add alternative version of N3
 - feat: add M18V3
 - feat: add Ajazz AKP153

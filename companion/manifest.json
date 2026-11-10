@@ -25,7 +25,7 @@
 			]
 		},
 		{ "vendorId": 26114, "productIds": [4097, 4099, 4096, 4098, 10537, 4116] },
-		{ "vendorId": 5376, "productIds": [12289, 12291] },
-		{ "vendorId": 768, "productIds": [4112, 12304, 12290] }
+		{ "vendorId": 5376, "productIds": [12291, 12293, 12289] },
+		{ "vendorId": 768, "productIds": [4112, 12304, 12290, 12292] }
 	]
 }

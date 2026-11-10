@@ -27,6 +27,7 @@ export class MiraboxWrapper implements SurfaceInstance {
 	private modeRefresh: Promise<void> = Promise.resolve()
 	private initialized = false
 
+	private brightness = 100
 	public get surfaceId(): string {
 		return this.#surfaceId
 	}
@@ -130,16 +131,14 @@ export class MiraboxWrapper implements SurfaceInstance {
 			} else {
 				lastCol = [10, 10, 10]
 			}
-			await Promise.all([
-				this.#streamDock.setLedArray(lastCol),
-				this.#streamDock.setLedBrightness(this.config.brightness ?? 100),
-			])
+			await Promise.all([this.#streamDock.setLedArray(lastCol), this.#streamDock.setLedBrightness(this.brightness)])
 		}
 	}
 
 	async ready(): Promise<void> {}
 
 	async setBrightness(percent: number): Promise<void> {
+		this.brightness = percent
 		if (this.#streamDock.outputs.find((op) => op.type === 'led')) {
 			await Promise.all([this.#streamDock.setBrightness(percent), this.#streamDock.setLedBrightness(percent)])
 		} else {
@@ -226,14 +225,11 @@ export class MiraboxWrapper implements SurfaceInstance {
 					if (offset + 2 < ledValues.length) ledValues.splice(offset, 3, ...color)
 				}
 
-				await Promise.all([
-					this.#streamDock.setLedArray(ledValues),
-					this.#streamDock.setLedBrightness(this.config.brightness ?? 100),
-				])
+				await Promise.all([this.#streamDock.setLedArray(ledValues), this.#streamDock.setLedBrightness(this.brightness)])
 			} else if (v > 0) {
 				await Promise.all([
 					this.#streamDock.setLedArray(hsvToRgb(h, s, v)),
-					this.#streamDock.setLedBrightness(this.config.brightness),
+					this.#streamDock.setLedBrightness(this.brightness),
 				])
 			} else {
 				if (this.#streamDock.productName === 'Stream Dock XL') {
