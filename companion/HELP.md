@@ -57,6 +57,8 @@ The N4 Pro uses the same Companion grid layout as the N4. The two rows of five L
 
 The touch strip is divided into four soft-key regions that provide separate press and release events. On firmware revision `013` or later, the rotary encoders also report press and release separately. Companion treats each encoder press as a click on older firmware such as `V4.N4 Pro E_HXWY.02.012`, or when the version is unavailable.
 
+Firmware revision `016` or later is required for the updated touch-strip support. Update your N4 Pro to revision `016` or later to use the new touch reports for soft-key press/release and swipe gestures. When this firmware revision is detected, Companion renders each of the four touch-strip regions at `200 x 112` pixels. Older firmware continues to use the legacy touch handling and image dimensions. This requirement is separate from revision `013`, which adds independent rotary encoder press and release events.
+
 To use a rotary encoder, enable the `Enable Rotary Actions` checkbox for its button. The LCD strip swipe gesture is mapped to the rotary actions of the fifth button in the third row: swiping left runs the rotate-left actions and swiping right runs the rotate-right actions.
 
 Each rotary encoder has an RGB LED. The four LEDs follow the dominant colors of the four rotary buttons in the fourth row, so they can be controlled independently through the corresponding Companion button styles. The surface brightness setting also controls the LED brightness.
