@@ -9,6 +9,7 @@ import { HSV_293SDefinition } from './HSV-293S.js'
 import { HSV_293S_3Definition } from './HSV-293S-3.js'
 import { HSV_293S_2Definition } from './HSV-293S-2.js'
 import { M18V3Definition } from './M18V3.js'
+import { VSDinsideM18Definition } from './VSDinside-M18.js'
 import { M3Definition } from './M3.js'
 import { N1Definition } from './N1.js'
 import { K1ProDefinition } from './K1Pro.js'
@@ -126,6 +127,7 @@ export const AllModels: StreamDockModelDefinition[] = [
 	HSV_293S_2Definition,
 	HSV_293S_3Definition,
 	M18V3Definition,
+	VSDinsideM18Definition,
 	M3Definition,
 	N1Definition,
 	Ajaz_AKP153Definition,
